@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TipCalculator</string>
+    <string name="bill_total">Bill Total</string>
+    <string name="custom_amount">Custom Amount</string>
+    <string name="or">OR</string>
+    <string name="calcButton">Calculate!</string>
 </resources>
