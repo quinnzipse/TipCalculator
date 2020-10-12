@@ -2,34 +2,55 @@ package com.example.tipcalculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 
-abstract class MainActivity() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
 
-    private var tip: Float = -1.0f
-
-    fun calculate(view: View) {
-        if(!customTip.text.equals("")){
-            tip = customTip.text.toString().toFloat()
+        lowTipButton.setOnClickListener {
+            fillTip(lowTipButton.text)
         }
 
-        val bill: Float = billTotal.text.toString().toFloat()
+        midTipButton.setOnClickListener {
+            fillTip(midTipButton.text)
+        }
 
-        // TODO: Assign this to output.
-        Log.d("Calculate","Bill: " + bill + "Tip Amount: " + calculateTipAmount(bill) + " Total: " + calculateTotalBill(bill))
+        highTipButton.setOnClickListener {
+            fillTip(highTipButton.text)
+        }
+
     }
 
-    private fun calculateTipAmount(bill: Float): Float {
+    fun calculate(view: View) {
+        val tip = customTip.text.toString().toIntOrNull() ?: -1
+        val bill: Float = billTotal.text.toString().toFloatOrNull() ?: -1.0f
+
+        if (tip > 0 && bill > 0) {
+            billText.text = formatString(bill)
+            tipText.text = formatString(calculateTipAmount(bill, tip))
+            calcTotalText.text = formatString(calculateTotalBill(bill, tip))
+            val tipPercent = "($tip%)"
+            tipPercentOutput.text = tipPercent
+        }
+    }
+
+    private fun formatString(num: Float): String {
+        return "$%.2f".format(num)
+    }
+
+    private fun calculateTipAmount(bill: Float, tip: Int): Float {
         return (tip / 100f) * bill
     }
 
-    private fun calculateTotalBill(bill: Float): Float {
-        return calculateTipAmount(bill) + bill
+    private fun calculateTotalBill(bill: Float, tip: Int): Float {
+        return calculateTipAmount(bill, tip) + bill
     }
+
+    private fun fillTip(text: CharSequence) {
+        customTip.setText(text.substring(0, text.indexOf("%")))
+    }
+
 }
